@@ -1,3 +1,3 @@
-const msg = "Hello World";
+import data from "./data";
 
-console.log(msg);
+console.log(data);
