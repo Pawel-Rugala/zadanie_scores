@@ -1,7 +1,10 @@
 import type { Match } from "./helpers/types";
-import { removeIncompleteMatches } from "./decorators";
+import { removeDuplicates, removeIncompleteMatches } from "./decorators";
 
-@removeIncompleteMatches
+//let's assume that matches array have like 1mil items
+//and we want to remove duplicates and incomplete matches before processing
+@removeDuplicates //remove duplicates
+@removeIncompleteMatches //remove incomplete matches
 class EventParser {
   matches: Match[];
   constructor(matches: Match[]) {

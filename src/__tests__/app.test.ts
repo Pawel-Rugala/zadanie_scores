@@ -19,6 +19,13 @@ describe("EventParser", () => {
     },
   ];
 
+  describe("removeDuplicates", () => {
+    it("removes duplicates from matches array", () => {
+      const eventParser = new EventParser(validMatches.concat(validMatches));
+      expect(eventParser.matches.length).toBe(1);
+    });
+  });
+
   describe("handleEventName", () => {
     it("returns the correct event name for a valid match", () => {
       const eventParser = new EventParser(validMatches);

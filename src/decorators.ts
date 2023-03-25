@@ -10,3 +10,19 @@ export function removeIncompleteMatches<T extends new (...args: any[]) => any>(c
     }
   };
 }
+
+export function removeDuplicates<T extends new (...args: any[]) => any>(constructor: T) {
+  return class extends constructor {
+    constructor(...args: any[]) {
+      super(...args);
+      const map = new Map<string, T>();
+      for (const obj of this.matches) {
+        const str = JSON.stringify(obj);
+        if (!map.has(str)) {
+          map.set(str, obj);
+        }
+      }
+      this.matches = Array.from(map.values());
+    }
+  };
+}
