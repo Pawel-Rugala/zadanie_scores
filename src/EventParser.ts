@@ -45,13 +45,20 @@ class EventParser {
         throw new Error("Invalid sport");
     }
   }
-  printAllMatches() {
+  printAllMatches(key?: keyof Match, value?: string) {
     console.log(
-      this.matches.map((match) => {
-        const name = this.handleEventName(match);
-        const score = this.handleEventScore(match);
-        return { name, score };
-      })
+      this.matches
+        .filter((match: Match) => {
+          if (key && value) {
+            return match[key] === value;
+          }
+          return true;
+        })
+        .map((match) => {
+          const name = this.handleEventName(match);
+          const score = this.handleEventScore(match);
+          return { name, score };
+        })
     );
   }
 }

@@ -1,5 +1,10 @@
 import type { Match } from "./helpers/types";
 
+// I constatly had type errors with those decorators
+// so I use this article
+// https://www.typescriptlang.org/docs/handbook/decorators.html#class-decorators
+// + chatgpt :) to solve the type errors
+
 export function removeIncompleteMatches<T extends new (...args: any[]) => any>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
