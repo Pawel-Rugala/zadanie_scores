@@ -1,6 +1,9 @@
 import type { Match } from "./helpers/types";
-import { removeIncompleteMatches } from "./decorators";
+import { removeDuplicates, removeIncompleteMatches } from "./decorators";
 
+//let's assume that matches array have like 1mil items
+//and we want to remove duplicates and incomplete matches before processing
+@removeDuplicates
 @removeIncompleteMatches
 class EventParser {
   matches: Match[];
@@ -32,29 +35,30 @@ class EventParser {
       case "volleyball":
       case "tennis": {
         const [mainScore, ...setScores] = (score as string).split(",");
-        return `Main score: ${mainScore} (set1 ${setScores[0]}, set2 ${setScores[1]}, set3 ${setScores[2]})`;
+        return `Main score: ${mainScore} (${setScores.map((score, index) => `set${index + 1} ${score}`).join(", ")})`;
       }
       case "basketball": {
-        // if (!Array.isArray(score) || !Array.isArray(score[0])) {
-        //   throw new Error("Invalid score");
-        // }
         const scoreArr = score as string[][]; //only to make TS happy.. not sure if there is better solution
-        return [
-          [scoreArr[0][0], scoreArr[0][1]],
-          [scoreArr[1][0], scoreArr[1][1]],
-        ].join(", ");
+        return scoreArr.flat().join(",");
       }
       default:
         throw new Error("Invalid sport");
     }
   }
-  printAllMatches() {
+  printAllMatches(key?: keyof Match, value?: string) {
     console.log(
-      this.matches.map((match) => {
-        const name = this.handleEventName(match);
-        const score = this.handleEventScore(match);
-        return { name, score };
-      })
+      this.matches
+        .filter((match: Match) => {
+          if (key && value) {
+            return match[key] === value;
+          }
+          return true;
+        })
+        .map((match) => {
+          const name = this.handleEventName(match);
+          const score = this.handleEventScore(match);
+          return { name, score };
+        })
     );
   }
 }
